@@ -130,7 +130,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  const url = 'https://raw.githubusercontent.com/dovinh/card_random/main/lib/assets/data_input/52Cards.txt';
+                  const url = 'https://drive.usercontent.google.com/download?id=1lMNVkVsNMJ7SlhceNVRBvtTr4CE7C3pQ&export=download';
                   if (await canLaunchUrl(Uri.parse(url))) {
                     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
                   } else {
