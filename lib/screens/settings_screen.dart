@@ -130,7 +130,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  const url = 'https://drive.usercontent.google.com/download?id=1lMNVkVsNMJ7SlhceNVRBvtTr4CE7C3pQ&export=download';
+                  const url = 'https://drive.usercontent.google.com/download?id=1getKdWeUtiI0Ja0PBYIKh32KsdWebLCy&export=download&authuser=0&confirm=t&uuid=ad5b4d65-0630-471c-859b-6461a572bf19&at=AN8xHoq5AUUcfe8uFA6SpCNGKJdO:1750008770373';
                   if (await canLaunchUrl(Uri.parse(url))) {
                     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
                   } else {
