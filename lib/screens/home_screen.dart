@@ -19,6 +19,9 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
   bool showMenu = false;
   Map<String, String> cardChallenges = {};
 
+  // Store the current suit for proper coloring
+  String? currentSuit;
+
   @override
   void initState() {
     super.initState();
@@ -109,15 +112,19 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
                       ),
                     ],
                   ),
-                  child: Text(
-                    challengeText,
+                  child: RichText(
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.robotoCondensed(
-                      fontSize: 22,
-                      color: isDefault ? Colors.grey : Colors.black87,
-                      fontStyle: isDefault ? FontStyle.italic : FontStyle.normal,
-                      fontWeight: isDefault ? FontWeight.normal : FontWeight.w500,
-                    ),
+                    text: isDefault
+                        ? TextSpan(
+                            text: challengeText,
+                            style: GoogleFonts.robotoCondensed(
+                              fontSize: 22,
+                              color: Colors.grey,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          )
+                        : _buildChallengeTextSpan(challengeText),
                   ),
                 ),
                 const Spacer(),
@@ -140,10 +147,9 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
-                  overlayChallenge,
+                child: RichText(
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.robotoCondensed(fontSize: 22),
+                  text: _buildChallengeTextSpan(overlayChallenge),
                 ),
               ),
               const SizedBox(height: 20),
@@ -167,14 +173,26 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
     final cardKey = '$rank$suit';
     final challenge = cardChallenges[cardKey] ?? '[Không có thử thách cho lá này]';
     final cardPath = 'lib/assets/images/cards/${_suitName(suit)}_$rank.png';
-    // Thêm vào lịch sử
-    HistoryService().add(cardKey, challenge);
+
+    // Get category text and color based on suit
+    final categoryInfo = _getCategoryInfo(suit);
+    final categoryText = categoryInfo['text'];
+
+    // Display challenge with category
+    final displayChallenge = '$categoryText $challenge';
+
+    // Store current suit for coloring
     setState(() {
-      challengeText = challenge;
-      overlayChallenge = challenge;
+      currentSuit = suit;
+      challengeText = displayChallenge;
+      overlayChallenge = displayChallenge;
       overlayCard = cardPath;
       overlayVisible = true;
     });
+
+    // Thêm vào lịch sử
+    HistoryService().add(cardKey, displayChallenge);
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('🎉 Bạn đã nhận được thử thách mới!'),
@@ -203,5 +221,64 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
       case '♠': return 'spades';
       default: return 'unknown';
     }
+  }
+
+  // Helper method to get category text and color based on suit
+  Map<String, dynamic> _getCategoryInfo(String suit) {
+    switch (suit) {
+      case '♠':
+        return {'text': '[Thể chất]', 'color': Colors.black};
+      case '♦':
+        return {'text': '[Trí tuệ]', 'color': Colors.orange}; // diamond: Trí tuệ
+      case '♥':
+        return {'text': '[Tình cảm]', 'color': Colors.red};
+      case '♣':
+        return {'text': '[Kỹ năng]', 'color': Colors.green}; // clubs: Kỹ năng
+      default:
+        return {'text': '', 'color': Colors.black};
+    }
+  }
+
+  TextSpan _buildChallengeTextSpan(String text) {
+    if (currentSuit == null) {
+      return TextSpan(
+        text: text,
+        style: GoogleFonts.robotoCondensed(
+          fontSize: 22,
+          color: Colors.black87,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    }
+    // Extract the category part (in []) and the rest as content
+    final categoryMatch = RegExp(r'^(\[[^\]]+\])').firstMatch(text);
+    String categoryPart = '';
+    String remainingText = text;
+    if (categoryMatch != null) {
+      categoryPart = categoryMatch.group(1)!;
+      remainingText = text.substring(categoryPart.length).trim();
+    }
+    final categoryColor = _getCategoryInfo(currentSuit!)['color'];
+    return TextSpan(
+      children: [
+        TextSpan(
+          text: categoryPart + '\n',
+          style: GoogleFonts.robotoCondensed(
+            fontSize: 22,
+            color: categoryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        TextSpan(
+          text: remainingText,
+          style: GoogleFonts.robotoCondensed(
+            fontSize: 22,
+            color: Colors.black87,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ],
+      style: GoogleFonts.robotoCondensed(fontSize: 22),
+    );
   }
 }

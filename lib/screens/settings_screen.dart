@@ -13,7 +13,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String selectedFile = '52Cards.txt';
+  String selectedFile = '52Sample.txt';
 
   @override
   void initState() {
@@ -24,8 +24,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _loadSelectedFile() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      selectedFile = prefs.getString('selectedFile') ?? '52Cards.txt';
+      selectedFile = prefs.getString('selectedFile') ?? '52Sample.txt';
     });
+  }
+
+  // Helper method to extract file name from path
+  String _getFileName(String path) {
+    return path.split('\\').last.split('/').last;
   }
 
   @override
@@ -62,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 10),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
@@ -72,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      selectedFile.isEmpty ? '[Tên file]' : selectedFile,
+                      selectedFile.isEmpty ? '[Tên file]' : _getFileName(selectedFile),
                       style: TextStyle(
                         fontSize: 16,
                         color: selectedFile.isEmpty ? Colors.grey[500] : Colors.black87,
@@ -80,13 +85,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black87,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
                     child: IconButton(
-                      icon: const Icon(Icons.folder, color: Colors.white, size: 20),
+                      icon: const Icon(Icons.folder, color: Colors.black54, size: 36),
                       onPressed: _pickFile,
                     ),
                   ),

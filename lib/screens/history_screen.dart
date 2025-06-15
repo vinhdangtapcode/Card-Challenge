@@ -60,9 +60,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: Text(
-                    item.challenge,
-                    style: const TextStyle(fontSize: 16),
+                  child: RichText(
+                    text: _buildChallengeTextSpan(item.challenge, item.card),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
@@ -71,5 +71,57 @@ class _HistoryScreenState extends State<HistoryScreen> {
         },
       ),
     );
+  }
+
+  TextSpan _buildChallengeTextSpan(String text, String card) {
+    // Extract the suit from the card string
+    String? suit;
+    if (card.contains('♠')) suit = '♠';
+    else if (card.contains('♥')) suit = '♥';
+    else if (card.contains('♦')) suit = '♦';
+    else if (card.contains('♣')) suit = '♣';
+    // Extract the category part (in []) and the rest as content
+    final categoryMatch = RegExp(r'^(\[[^\]]+\])').firstMatch(text);
+    String categoryPart = '';
+    String remainingText = text;
+    if (categoryMatch != null) {
+      categoryPart = categoryMatch.group(1)!;
+      remainingText = text.substring(categoryPart.length).trim();
+    }
+    final categoryColor = _getCategoryColor(suit);
+    return TextSpan(
+      children: [
+        TextSpan(
+          text: categoryPart + '\n',
+          style: TextStyle(
+            fontSize: 16,
+            color: categoryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        TextSpan(
+          text: remainingText,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Color _getCategoryColor(String? suit) {
+    switch (suit) {
+      case '♠':
+        return Colors.black;   // spades: Thể chất
+      case '♦':
+        return Colors.orange; // diamonds: Trí tuệ
+      case '♥':
+        return Colors.red;    // hearts: Tình cảm
+      case '♣':
+        return Colors.green; // clubs: Kỹ năng
+      default:
+        return Colors.black;
+    }
   }
 }

@@ -38,7 +38,7 @@ class TxtCardParser {
       content = await File(selectedFile).readAsString();
     } else {
       content = await rootBundle
-          .loadString('lib/assets/data_input/52Cards.txt');
+          .loadString('lib/assets/data_input/52Sample.txt');
     }
     final lines = content.split(RegExp(r'\r?\n'));
     final map = <String, String>{};

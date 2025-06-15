@@ -1,5 +1,5 @@
 name: card_random
-description: "A new Flutter project."
+description: "A simple random game by Flutter"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -67,7 +67,7 @@ flutter:
   assets:
     - lib/assets/images/
     - lib/assets/images/cards/
-    - lib/assets/data_input/52Cards.txt
+    - lib/assets/data_input/52Sample.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
