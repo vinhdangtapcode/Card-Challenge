@@ -16,7 +16,7 @@
 3. Nhấn đúp vào bộ bài để rút một lá bài.
 4. Đợi hiệu ứng rung, lá bài và thử thách sẽ xuất hiện.
 5. Thực hiện thử thách được giao!
-6. Có thể xem lại lịch sử các thử thách đã rút cũng như thay đổi thử thách tùy chỉnh qua file txt:[Link](https://drive.google.com/file/d/1getKdWeUtiI0Ja0PBYIKh32KsdWebLCy/view?usp=sharing).
+6. Có thể xem lại lịch sử các thử thách đã rút cũng như thay đổi thử thách tùy chỉnh qua file txt: [Link](https://drive.google.com/file/d/1getKdWeUtiI0Ja0PBYIKh32KsdWebLCy/view?usp=sharing).
 
 ## Công nghệ sử dụng
 - Flutter (Dart)
