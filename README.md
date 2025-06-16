@@ -11,7 +11,7 @@
 - **Tùy chỉnh thử thách:** Cho phép thêm, sửa, xóa thử thách theo ý muốn qua file txt với file mẫu 52Sample.txt có thể download trong ứng dụng.
 
 ## Hướng dẫn chơi
-1. Tải ứng dụng tại: [Download link](https://drive.google.com/file/d/1w1R5kzuy2usA_NctPMxr8IC4-JwEA5Pi/view?usp=sharing)
+1. Tải và cài đặt ứng dụng tại: [Download link](https://drive.google.com/file/d/1w1R5kzuy2usA_NctPMxr8IC4-JwEA5Pi/view?usp=sharing)
 2. Mở ứng dụng.
 3. Nhấn đúp vào bộ bài để rút một lá bài.
 4. Đợi hiệu ứng rung, lá bài và thử thách sẽ xuất hiện.
