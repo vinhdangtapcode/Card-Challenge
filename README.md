@@ -1,7 +1,7 @@
 # Card Challenge - Trò chơi thử thách thẻ bài
 
 ## Giới thiệu
-**Card Challenge** là một ứng dụng trò chơi giải trí, nơi người chơi sẽ nhận các thử thách ngẫu nhiên thông qua việc rút thẻ bài từ bộ bài ảo. Mỗi lá bài sẽ tương ứng với một thử thách khác nhau, giúp tăng sự thú vị và gắn kết trong các buổi tụ họp bạn bè, gia đình hoặc team building.
+**Card Challenge** là một ứng dụng trò chơi giải trí, nơi người chơi sẽ nhận các thử thách ngẫu nhiên thông qua việc rút thẻ bài từ bộ bài ảo. Mỗi lá bài sẽ tương ứng với một thử thách khác nhau, độ khó thử thách sẽ tăng theo độ lớn của lá bài A->K, mỗi chất bài đại diện cho 1 Thể loại Thử thách riêng. Trò chơi giúp tăng sự thú vị và gắn kết trong các buổi tụ họp bạn bè, gia đình hoặc team building.
 
 ## Tính năng nổi bật
 - **Bộ bài ảo:** Hình ảnh bộ bài đẹp mắt, thao tác rút bài trực quan.
