@@ -11,7 +11,7 @@ class CardChallengeScreen extends StatefulWidget {
   State<CardChallengeScreen> createState() => _CardChallengeScreenState();
 }
 
-class _CardChallengeScreenState extends State<CardChallengeScreen> {
+class _CardChallengeScreenState extends State<CardChallengeScreen> with TickerProviderStateMixin {
   String challengeText = '[Nội dung thử thách]';
   bool overlayVisible = false;
   String overlayCard = '';
@@ -22,10 +22,39 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
   // Store the current suit for proper coloring
   String? currentSuit;
 
+  late AnimationController _shakeController;
+  late Animation<double> _shakeAnimation;
+  late AnimationController _cardAppearController;
+  late Animation<double> _cardAppearAnimation;
+
   @override
   void initState() {
     super.initState();
     _loadChallenges();
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    // Rung đều từ đầu đến cuối bằng Curves.linear
+    _shakeAnimation = Tween<double>(begin: 0, end: 4).chain(CurveTween(curve: Curves.linear)).animate(_shakeController);
+    _shakeController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _shakeController.reset();
+      }
+    });
+    // Card appear animation
+    _cardAppearController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _cardAppearAnimation = Tween<double>(begin: 200, end: 0).chain(CurveTween(curve: Curves.easeOutBack)).animate(_cardAppearController);
+  }
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    _cardAppearController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadChallenges() async {
@@ -88,11 +117,20 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
                 const SizedBox(height: 30),
                 Center(
                   child: GestureDetector(
-                    onDoubleTap: _showChallenge,
-                    child: Image.asset(
-                      'lib/assets/images/deck.png',
-                      width: 220,
-                      height: 250,
+                    onDoubleTap: _onDeckDoubleTap,
+                    child: AnimatedBuilder(
+                      animation: _shakeController,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(_shakeAnimation.value * (DateTime.now().millisecond % 2 == 0 ? 1 : -1), 0),
+                          child: child,
+                        );
+                      },
+                      child: Image.asset(
+                        'lib/assets/images/deck.png',
+                        width: 220,
+                        height: 250,
+                      ),
                     ),
                   ),
                 ),
@@ -139,7 +177,19 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
           ),
           if (overlayVisible) Center(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Image.asset(overlayCard, width: 220, height: 250),
+              AnimatedBuilder(
+                animation: _cardAppearController,
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: Offset(0, _cardAppearAnimation.value),
+                    child: Opacity(
+                      opacity: 1 - (_cardAppearAnimation.value / 100).clamp(0, 1),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Image.asset(overlayCard, width: 220, height: 250),
+              ),
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(20),
@@ -174,14 +224,10 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
     final challenge = cardChallenges[cardKey] ?? '[Không có thử thách cho lá này]';
     final cardPath = 'lib/assets/images/cards/${_suitName(suit)}_$rank.png';
 
-    // Get category text and color based on suit
     final categoryInfo = _getCategoryInfo(suit);
     final categoryText = categoryInfo['text'];
-
-    // Display challenge with category
     final displayChallenge = '$categoryText $challenge';
 
-    // Store current suit for coloring
     setState(() {
       currentSuit = suit;
       challengeText = displayChallenge;
@@ -189,8 +235,9 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
       overlayCard = cardPath;
       overlayVisible = true;
     });
+    _cardAppearController.reset();
+    _cardAppearController.forward();
 
-    // Thêm vào lịch sử
     HistoryService().add(cardKey, displayChallenge);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -280,5 +327,12 @@ class _CardChallengeScreenState extends State<CardChallengeScreen> {
       ],
       style: GoogleFonts.robotoCondensed(fontSize: 22),
     );
+  }
+
+  void _onDeckDoubleTap() {
+    _shakeController.forward();
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      _showChallenge();
+    });
   }
 }
